@@ -1,0 +1,42 @@
+.canvasWrapper2{
+  display: block;
+  margin: auto;
+  width: 439px;
+  height: 439px;
+}
+
+.center{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom:  10px;
+  text-align: center;
+  display: block;
+}
+.convasWrapper1{
+  margin: auto;
+  position: relative; 
+}
+
+#backgroundCanvas{
+  position: absolute;
+  margin: auto;
+  display: block;
+  z-index: -1;
+  /*position: absolute;
+  z-index: -1;*/
+  
+  width: 440px;
+  height: 440px;
+  background-color: gray;
+}
+
+.myCanvas{
+  height: 100px;
+  width: 100px;
+  margin: 3px;
+  border-radius: 2px;
+
+  position: relative;
+  background-color: darkgray;
+}

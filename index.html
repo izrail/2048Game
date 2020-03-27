@@ -1,0 +1,287 @@
+<!DOCTYPE html> <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="keywords" content="2048小游戏" />
+        <meta name="description" content="2048网页版小游戏游戏" />
+        <meta name="authors" content="izrail"/>
+
+        <title>2048小游戏</title>
+        <link rel="stylesheet" type="text/css" href="./css/myStyle.css">
+        <script type="text/javascript">
+            var gameTable = new Array(16);
+            var pieceCount = 0;
+            for(var i = 0;i<16;i++){
+                gameTable[i]=0;
+            }
+            
+            //点击NewGame会触发该函数，1.将画板清空，并随机在一个位置生成2
+            function init(){
+                for(var i=0;i<16;i++){
+                    var canvas = document.getElementById("canvas"+i);
+                    var ctx=canvas.getContext("2d");
+                    ctx.clearRect(0,0,300,300);
+                }
+                for(var i = 0;i<16;i++){
+                    gameTable[i]=0;
+                }
+                var randNum = parseInt(Math.random()*16);
+                gameTable[randNum]=2;
+                showNum(randNum);
+            }
+
+            //点击上下左右均会触发setNum函数,在画布上生成2
+            function setNum(){
+                var randNum = parseInt(Math.random()*16);
+                while(true){
+                    if(gameTable[randNum%16]==0){
+                        break;
+                    }else{
+                        randNum++;
+                    }
+                }
+                gameTable[randNum%16]=2;
+                showNum(randNum%16);
+            }
+
+            //接收一个参数为生成数字位置，该函数将参数所在位置通过table进行绘制
+            function showNum(num){
+                var canvas = document.getElementById("canvas"+num);
+                var ctx=canvas.getContext("2d");
+                ctx.font ="100px verdana";
+                ctx.fillText(gameTable[num]+"",120,100);
+            }
+
+            //判断是否为上下左右按键触发
+            document.onkeydown= function (event){
+                var keyNum;
+                var keyChar;
+                var arrowFlag=0;
+                keyNum = window.event ? event.keyCode : event.which;
+
+                //37,38,39,40分别是，左，上，右，下
+                /*
+                以case 37为例：
+                i代表行号，k代表列号
+                pos代表有数字的下标
+                flag表示数字是否可以累加，0代表不可以累加，1代表可以累加
+                */
+                switch(keyNum){
+                    case 37:
+                        arrowFlag=1;
+                        for(var i=0;i<4;i++){
+                            var k=0;
+                            var pos=0;
+                            var flag=0;
+                            while(k<4){
+                                if(gameTable[i*4+k]==0){
+                                    k++;
+                                }
+                                else{
+                                    if(flag==0){
+                                        if(k!=0){
+                                            gameTable[i*4+pos]=gameTable[i*4+k];
+                                            gameTable[i*4+k]=0;
+                                        }
+                                        flag=1;
+                                        k++;
+                                    }
+                                    else{
+                                        if(gameTable[i*4+pos]==gameTable[i*4+k]){
+                                            flag=0;
+                                            gameTable[i*4+pos]+=gameTable[i*4+pos];
+                                            gameTable[i*4+k]=0;
+                                            pos++;
+                                            k++;
+                                        }
+                                        else{
+                                            pos++;
+                                            if(pos!=k){
+                                                gameTable[i*4+pos]=gameTable[i*4+k];
+                                                gameTable[i*4+k]=0;
+                                            
+                                            }
+                                            k++;
+                                            flag=1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 38:
+                        arrowFlag=1;
+                        for(var i=0;i<4;i++){
+                            var k=0;
+                            var pos=0;
+                            var flag=0;
+                            while(k<4){
+                                if(gameTable[k*4+i]==0){
+                                    k++;
+                                }
+                                else{
+                                    if(flag==0){
+                                        if(k!=0){
+                                            gameTable[pos*4+i]=gameTable[k*4+i];
+                                            gameTable[k*4+i]=0;
+                                        }
+                                        flag=1;
+                                        k++;
+                                    }
+                                    else{
+                                        if(gameTable[pos*4+i]==gameTable[k*4+i]){
+                                            flag=0;
+                                            gameTable[pos*4+i]+=gameTable[pos*4+i];
+                                            gameTable[k*4+i]=0;
+                                            pos++;
+                                            k++;
+                                        }
+                                        else{
+                                            pos++;
+                                            if(pos!=k){
+                                                gameTable[pos*4+i]=gameTable[k*4+i];
+                                                gameTable[k*4+i]=0;
+                                                
+                                            }
+                                            k++;
+                                            flag=1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 39:
+                        arrowFlag=1;
+                        for(var i=0;i<4;i++){
+                            var k=3;
+                            var pos=3;
+                            var flag=0;
+                            while(k>=0){
+                                if(gameTable[i*4+k]==0){
+                                    k--;
+                                }
+                                else{
+                                    if(flag==0){
+                                        if(k!=3){
+                                            gameTable[i*4+pos]=gameTable[i*4+k];
+                                            gameTable[i*4+k]=0;
+                                        }
+                                        flag=1;
+                                        k--;
+                                    }
+                                    else{
+                                        if(gameTable[i*4+pos]==gameTable[i*4+k]){
+                                            flag=0;
+                                            gameTable[i*4+pos]+=gameTable[i*4+pos];
+                                            gameTable[i*4+k]=0;
+                                            pos--;
+                                            k--;
+                                        }
+                                        else{
+                                            pos--;
+                                            if(pos!=k){
+                                                gameTable[i*4+pos]=gameTable[i*4+k];
+                                                gameTable[i*4+k]=0;
+                                                
+                                            }
+                                            k--;
+                                            flag=1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 40:
+                        arrowFlag=1;
+                        for(var i=0;i<4;i++){
+                            var k=3;
+                            var pos=3;
+                            var flag=0;
+                            while(k>=0){
+                                if(gameTable[k*4+i]==0){
+                                    k--;
+                                }
+                                else{
+                                    if(flag==0){
+                                        if(k!=3){
+                                            gameTable[pos*4+i]=gameTable[k*4+i];
+                                            gameTable[k*4+i]=0;
+                                        }
+                                        flag=1;
+                                        k--;
+                                    }
+                                    else{
+                                        if(gameTable[pos*4+i]==gameTable[k*4+i]){
+                                            flag=0;
+                                            gameTable[pos*4+i]+=gameTable[pos*4+i];
+                                            gameTable[k*4+i]=0;
+                                            pos--;
+                                            k--;
+                                        }
+                                        else{
+                                            pos--;
+                                            if(pos!=k){
+                                                gameTable[pos*4+i]=gameTable[k*4+i];
+                                                gameTable[k*4+i]=0;
+                                                
+                                            }
+                                            k--;
+                                            flag=1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    //根据gameTable将画布重新渲染
+                    for(var i = 0;i<16;i++){
+                        var canvas = document.getElementById("canvas"+(i));
+                        var ctx=canvas.getContext("2d");
+                        ctx.clearRect(0,0,300,300);
+                        if(gameTable[i]==0){
+
+                        }else{
+                            ctx.font ="100px verdana";
+                            ctx.fillText(gameTable[i]+"",120,100);
+                        }
+                    }
+
+                    //如果触发，上下左右就在table上再放一个数字
+                    if(arrowFlag==1){
+                        setNum();
+                    }
+
+                    keyChar = String.fromCharCode(keyNum);
+                }
+            </script>
+        </head>
+        <body>
+                <div class="canvasWrapper2">
+                    <canvas id="canvas0"  class="myCanvas"></canvas>
+                    <canvas id="canvas1"  class="myCanvas"></canvas>
+                    <canvas id="canvas2"  class="myCanvas"></canvas>
+                    <canvas id="canvas3"  class="myCanvas"></canvas>
+                    <canvas id="canvas4"  class="myCanvas"></canvas>
+                    <canvas id="canvas5"  class="myCanvas"></canvas>
+                    <canvas id="canvas6"  class="myCanvas"></canvas>
+                    <canvas id="canvas7"  class="myCanvas"></canvas>
+                    <canvas id="canvas8"  class="myCanvas"></canvas>
+                    <canvas id="canvas9"  class="myCanvas"></canvas>
+                    <canvas id="canvas10" class="myCanvas"></canvas>
+                    <canvas id="canvas11" class="myCanvas"></canvas>
+                    <canvas id="canvas12" class="myCanvas"></canvas>
+                    <canvas id="canvas13" class="myCanvas"></canvas>
+                    <canvas id="canvas14" class="myCanvas"></canvas>
+                    <canvas id="canvas15" class="myCanvas"></canvas>
+                </div>
+
+            <button onclick="init()" class="center">New Game!</button>
+
+            <div class="center">通过方向键控制方向!</div>
+            <script>
+            </script>
+        </body>
+    </html>
